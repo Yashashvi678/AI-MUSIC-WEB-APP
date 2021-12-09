@@ -3,6 +3,9 @@ song2 = "";
 
 function preload()
 {
+
+    song1 = loadSound("Song_1.mp3");
+    song2 = loadSound("Song_2.mp3");
 }
 
 function setup()
