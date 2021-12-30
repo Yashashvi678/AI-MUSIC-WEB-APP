@@ -11,6 +11,11 @@ body
     margin: 1px;
 }
 
+.stop
+{
+    margin-top: 20px;
+}
+
 .note
 {
     font-size: 13px;

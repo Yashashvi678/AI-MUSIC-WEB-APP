@@ -1,6 +1,12 @@
 song1 = "";
 song2 = "";
 
+leftWristx = 0;
+leftWristy = 0;
+rightWristx = 0; 
+rightWristy = 0;
+
+
 function preload()
 {
 
@@ -15,10 +21,41 @@ function setup()
 
     video = createCapture(VIDEO);
     video.hide();
+
+    poseNet = ml5.poseNet(video , modelLoaded);
+    poseNet.on("pose" , gotPoses);
 }
+
+function modelLoaded()
+{
+    console.log("Model Loaded");
+}
+
+
+function gotPoses(results)
+{
+    if(results.length > 0)
+    {
+        console.log(results);
+        leftWristx = results[0].pose.leftWrist.x;
+        leftWristy = results[0].pose.leftWrist.y;
+        rightWristx = results[0].pose.rightWrist.x;
+        rightWristy = results[0].pose.rightWrist.y;
+
+        console.log("LeftWrist = " + leftWristx + " , " + leftWristy);
+        console.log("RightWrist = " +  rightWristx + " , " + rightWristy);
+    }
+}
+
 
 function draw()
 {
     image(video, 0, 0, 380, 380);
 }
 
+
+function stop()
+{
+    song1.stop();
+    song2.stop();
+}
