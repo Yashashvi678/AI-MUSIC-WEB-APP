@@ -5,50 +5,45 @@ song2 = "";
 song1_status = "";
 song2_status = "";
 
-scoreRighttWrist = 0;
+scoreRightWrist = 0;
 scoreLeftWrist = 0;
 
 leftWristx = 0;
 leftWristy = 0;
-rightWristx = 0; 
+rightWristx = 0;
 rightWristy = 0;
 
 
-function preload()
-{
+function preload() {
 
-    song1 = loadSound("Song_1.mp3");
-    song2 = loadSound("Song_2.mp3");
+    song1 = loadSound("count_on_me.mp3");
+    song2 = loadSound("TOGETHER_WE_CAN_CHANGE_THE_WORLD.mp3");
 }
 
-function setup()
-{
-        canvas = createCanvas(380, 380);
-        canvas.center();
-    
-        video = createCapture(VIDEO);
-        video.hide();
+function setup() {
+    canvas = createCanvas(400, 400);
+    canvas.center();
 
-    poseNet = ml5.poseNet(video , modelLoaded);
-    poseNet.on("pose" , gotPoses);
+    video = createCapture(VIDEO);
+    video.hide();
+
+    poseNet = ml5.poseNet(video, modelLoaded);
+    poseNet.on("pose", gotPoses);
 }
 
-function modelLoaded()
-{
+function modelLoaded() {
     console.log("Model Loaded");
 }
 
 
-function gotPoses(results)
-{
-    if(results.length > 0)
-    {
+function gotPoses(results) {
+    if (results.length > 0) {
         console.log(results);
 
         scoreLeftWrist = results[0].pose.keypoints[9].score;
         scoreRightWrist = results[0].pose.keypoints[10].score;
         console.log("scoreRightWrist = " + scoreRightWrist + "scoreLeftWrist = " + scoreLeftWrist);
-        
+
         leftWristx = results[0].pose.leftWrist.x;
         leftWristy = results[0].pose.leftWrist.y;
         rightWristx = results[0].pose.rightWrist.x;
@@ -56,48 +51,52 @@ function gotPoses(results)
 
 
         console.log("LeftWrist = " + leftWristx + " , " + leftWristy);
-        console.log("RightWrist = " +  rightWristx + " , " + rightWristy);
+        console.log("RightWrist = " + rightWristx + " , " + rightWristy);
     }
 }
 
 
-function draw()
-{
-    image(video, 0, 0, 380, 380);
+function draw() {
+    image(video, 0, 0, 400, 400);
 
 
-    song1_status = isPlaying();
-    song2_status = isPlaying();
+    song1_status = song1.isPlaying();
+    song2_status = song2.isPlaying();
 
     if(scoreRightWrist > 0.2)
-    {
+	{ 
+		circle(rightWristx,rightWristy,20);
 
-        circle(rightWristX,rightWristY,20);
+			song2.stop();
 
-        song2.stop();
-        song1.play();
-        document.getElementById("song").innerHTML = "Playing - Harry Potter Theme Song";
-    }
+		if(song1_status == false)
+		{
+			song1.play();
+			document.getElementById("song_name").innerHTML = "Playing - Harry Potter Theme Song"
+		}
+	}
 
+	if(scoreLeftWrist > 0.2)
+	{
+		circle(leftWristx,leftWristy,20);
 
-    if(scoreLeftWrist > 0.2)
-    {
+			song1.stop();
 
-        circle(rightWristX,rightWristY,20);
+		if(song2_status == false)
+		{
+			song2.play();
+			document.getElementById("song_name").innerHTML = "Playing - Peter Pan Song"
+		}
+	}
 
-        song1.stop();
-        song2.play();
-        document.getElementById("song").innerHTML = "Playing - Peter Pan";
-    }
 
     fill("red");
     stroke("red");
-    circle(rightWristy)
+    
 }
 
 
-function stop()
-{
+function stop() {
     song1.stop();
     song2.stop();
 }
